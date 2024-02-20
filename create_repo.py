@@ -1,13 +1,16 @@
 import os
+import argparse
+import subprocess
 import requests
 from pprint import pprint
-import argparse
 from secrets_1 import GITHUB_TOKEN
+
+
 parser=argparse.ArgumentParser()
 parser.add_argument("--name", "--n", type=str, dest="name", required=True)
 parser.add_argument("--private", "-p", dest="is_private", action="store_true")
 args=parser.parse_args()
-print(args)
+# print(args)
 
 username="Tanisha0904"
 repo_name=args.name
@@ -21,7 +24,7 @@ if is_private:
 else:
     payload='{"name": "'+repo_name+'", "private":false}'
     
-print(payload)
+# print(payload)
 # payload='{"name":"{repo_name}"}'
 
 headers={
@@ -35,22 +38,54 @@ try:
 except requests.exceptions.RequestException as err:
     raise SystemExit(err)
 
+
 try:
-    repo_path="D:\BMC\Create_Repo_Auto" #path to the directory where you want to create your repository in local computer  
+    repo_path = "D:\Temp_Repos"  #path to the directory where you want to create your repository in local computer  
     #below are some shell commands run in python using the os system functions to execute specific commands and os change directory 
-    os.chdir(repo_path)
+    os.chdir(repo_path)    
     os.system('mkdir '+repo_name)
     os.chdir(repo_path+"\\"+repo_name)
-    #below are the usual git commands that we run when we create a new repo 
+    
+    # Initialize Git repository
     os.system("git init")
-    os.system("git remote add origin https://github.com/"+username+"/"+repo_name+".git")
-    os.system("git add .")   
-    os.system("git commit -m 'Initial Commit'")   
+    
+    # Create README.md and text.txt files
     os.system("echo '# "+repo_name+"' >> README.md")    
-    os.system("git push -u origin main")   
+    os.system("echo '# ahdasds"+repo_name+"' >> text.txt")   
+    
+    # Add files to staging area
+    os.system("git add .")   
+    
+    # Commit files
+    os.system('git commit -m "Initial Commit"')   
+    
+    # Set the branch to main (or master depending on your Git configuration)
+    os.system("git branch -M main")   
+    
+    # Add remote origin and push
+    os.system("git remote add origin https://github.com/"+username+"/"+repo_name+".git")
+    os.system("git push -u origin main")
+    print("Repository created successfully with the example text file.")
 
 except FileExistsError  as err:
     raise SystemExit(err)
+except subprocess.CalledProcessError as err:
+    raise SystemExit("Error occurred while executing Git commands:", err)
+except Exception as err:
+    raise SystemExit("An unexpected error occurred:", err)
 
 
-pprint(r.json())
+os.system("echo '   Hello' >> text.txt")
+os.system("git add .")   
+    
+    # Commit files
+os.system('git commit -m "Initial Commit"')   
+    
+    # Set the branch to main (or master depending on your Git configuration)
+os.system("git branch -M main")   
+    
+    # Add remote origin and push
+os.system("git remote add origin https://github.com/"+username+"/"+repo_name+".git")
+os.system("git push -u origin main")
+
+
